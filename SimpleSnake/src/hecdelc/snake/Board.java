@@ -31,16 +31,24 @@ public class Board extends JPanel implements ActionListener{
 	
 	public Board(Snake snake){
 		
-		cherry = null;
+		spawnCherry();
 		this.snake = snake;
-		timer = new Timer(20, this);
+		timer = new Timer(25, this);
 		timer.start();
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		//repaint();
+		
+		snake.move();
+		if(snake.headAt(cherry.x, cherry.y)){
+			snake.grow();
+			spawnCherry();
+		}
+
+		
+		repaint();
 	}
 	
 	@Override
@@ -48,7 +56,8 @@ public class Board extends JPanel implements ActionListener{
 		
 		super.paintComponent(g);
 		fillBackground(g);
-		spawnCherry(g);
+		drawSnake(g);
+		drawCherry(g);
 		
 	}
 	
@@ -72,15 +81,24 @@ public class Board extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Spawns a Cherry inside the board at any random position.
-	 * @param g
+	 * Spawns a Cherry inside the board at any random position, without drawing it.
 	 */
-	private void spawnCherry(Graphics g){
+	private void spawnCherry(){
 		
 		Random random = new Random();
 		cherry = new Point(random.nextInt(79), random.nextInt(79));
+		
+	}
+	
+	/**
+	 * Draws the existing cherry inside the board, at its position.
+	 * @param g
+	 */
+	private void drawCherry(Graphics g){
+		
 		g.setColor(CHERRY_COLOR);
 		g.fillRect(cherry.x * Snake.SCALE, cherry.y * Snake.SCALE, Snake.SCALE, Snake.SCALE);
+		
 	}
 
 }
